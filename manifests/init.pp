@@ -1,5 +1,3 @@
-
-
 class apache::install {
   package { 'apache':
     ensure   => $apache::params::version,
@@ -30,5 +28,9 @@ class apache::config {
 
 class apache {
   include apache::params
-  include apache::install, apache::service, apache::config
+  anchor {'apache::begin': } ->
+  class { 'apache::install': } ->
+  class { 'apache::config': } ->
+  class { 'apache::service': } ->
+  anchor {'apache::end': }
 }
